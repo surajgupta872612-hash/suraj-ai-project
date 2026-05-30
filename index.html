@@ -1,0 +1,2570 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 RoboForge AI - Crazy Robot Builder</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neon-blue: #00f0ff;
+            --neon-green: #00ff88;
+            --neon-purple: #bf00ff;
+            --neon-pink: #ff006e;
+            --neon-orange: #ff6600;
+            --dark-bg: #0a0a0f;
+            --card-bg: #12121a;
+            --glass: rgba(255,255,255,0.05);
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-bg);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* ===== PARTICLE CANVAS ===== */
+        #particles-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10,10,15,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,240,255,0.15);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0,240,255,0.3);
+            cursor: pointer;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px rgba(0,240,255,0.5);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px; left: 0;
+            width: 0; height: 2px;
+            background: var(--neon-blue);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-btn {
+            padding: 10px 25px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-green));
+            border: none;
+            border-radius: 30px;
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0,240,255,0.5);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 40px 60px;
+            z-index: 1;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(0,240,255,0.1);
+            border: 1px solid rgba(0,240,255,0.3);
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: var(--neon-blue);
+            margin-bottom: 25px;
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(0,240,255,0.3); }
+            50% { border-color: rgba(0,240,255,0.8); }
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-green), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradient-shift 3s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #888;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-green));
+            border: none;
+            border-radius: 50px;
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(0,240,255,0.4);
+        }
+
+        .btn-secondary {
+            padding: 15px 40px;
+            background: transparent;
+            border: 2px solid var(--neon-purple);
+            border-radius: 50px;
+            color: var(--neon-purple);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--neon-purple);
+            color: #fff;
+            box-shadow: 0 10px 40px rgba(191,0,255,0.4);
+            transform: translateY(-3px);
+        }
+
+        /* ===== ROBOT 3D ===== */
+        .robot-3d-container {
+            margin: 60px auto 0;
+            width: 300px;
+            height: 350px;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .robot-3d {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .robot-head {
+            width: 120px;
+            height: 90px;
+            background: linear-gradient(135deg, #1a1a2e, #2a2a4e);
+            border-radius: 20px;
+            margin: 0 auto;
+            position: relative;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0,240,255,0.3), inset 0 0 20px rgba(0,240,255,0.1);
+        }
+
+        .robot-eyes {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 15px;
+        }
+
+        .robot-eye {
+            width: 25px;
+            height: 25px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--neon-green), 0 0 30px var(--neon-green);
+            animation: blink 3s infinite;
+        }
+
+        @keyframes blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+
+        .robot-mouth {
+            width: 50px;
+            height: 8px;
+            background: var(--neon-blue);
+            margin: 10px auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px var(--neon-blue);
+            animation: talk 1.5s infinite;
+        }
+
+        @keyframes talk {
+            0%, 100% { width: 50px; }
+            50% { width: 30px; }
+        }
+
+        .robot-antenna {
+            width: 4px;
+            height: 30px;
+            background: var(--neon-purple);
+            margin: 0 auto;
+            position: relative;
+            top: -30px;
+        }
+
+        .robot-antenna::after {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: var(--neon-pink);
+            border-radius: 50%;
+            position: absolute;
+            top: -6px; left: -4px;
+            box-shadow: 0 0 15px var(--neon-pink);
+            animation: antenna-glow 1s infinite alternate;
+        }
+
+        @keyframes antenna-glow {
+            from { box-shadow: 0 0 10px var(--neon-pink); }
+            to { box-shadow: 0 0 25px var(--neon-pink), 0 0 50px var(--neon-pink); }
+        }
+
+        .robot-body {
+            width: 160px;
+            height: 120px;
+            background: linear-gradient(135deg, #1a1a2e, #2a2a4e);
+            border-radius: 20px;
+            margin: 10px auto 0;
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 0 20px rgba(191,0,255,0.3), inset 0 0 20px rgba(191,0,255,0.1);
+            position: relative;
+        }
+
+        .robot-core {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, var(--neon-green), transparent);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            animation: core-pulse 1.5s infinite;
+        }
+
+        @keyframes core-pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+        }
+
+        .robot-arms {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+        }
+
+        .robot-arm {
+            width: 20px;
+            height: 80px;
+            background: linear-gradient(135deg, #1a1a2e, #2a2a4e);
+            border: 1px solid var(--neon-orange);
+            position: absolute;
+            border-radius: 10px;
+        }
+
+        .robot-arm.left {
+            left: -30px;
+            transform-origin: top center;
+            animation: arm-swing-left 2s ease-in-out infinite;
+        }
+
+        .robot-arm.right {
+            right: -30px;
+            transform-origin: top center;
+            animation: arm-swing-right 2s ease-in-out infinite;
+        }
+
+        @keyframes arm-swing-left {
+            0%, 100% { transform: rotate(5deg); }
+            50% { transform: rotate(-10deg); }
+        }
+
+        @keyframes arm-swing-right {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(10deg); }
+        }
+
+        .robot-legs {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 10px;
+        }
+
+        .robot-leg {
+            width: 25px;
+            height: 60px;
+            background: linear-gradient(135deg, #1a1a2e, #2a2a4e);
+            border: 1px solid var(--neon-blue);
+            border-radius: 10px;
+        }
+
+        /* ===== STATS BAR ===== */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            padding: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--neon-blue);
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* ===== SECTIONS COMMON ===== */
+        .section {
+            position: relative;
+            z-index: 1;
+            padding: 80px 40px;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .section-title .highlight {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 50px;
+        }
+
+        /* ===== TOOLS GRID ===== */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 35px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.4s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(0,240,255,0.03));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .tool-card:hover::before {
+            opacity: 1;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0,240,255,0.3);
+            box-shadow: 0 20px 60px rgba(0,240,255,0.1);
+        }
+
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .tool-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .tool-card p {
+            color: #888;
+            line-height: 1.6;
+        }
+
+        .tool-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-top: 15px;
+            font-weight: 700;
+        }
+
+        .tag-ai { background: rgba(0,240,255,0.15); color: var(--neon-blue); }
+        .tag-code { background: rgba(0,255,136,0.15); color: var(--neon-green); }
+        .tag-design { background: rgba(191,0,255,0.15); color: var(--neon-purple); }
+        .tag-hardware { background: rgba(255,102,0,0.15); color: var(--neon-orange); }
+
+        /* ===== AI CHAT SECTION ===== */
+        .ai-chat-section {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 25px;
+            border: 1px solid rgba(0,240,255,0.15);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 20px 25px;
+            background: rgba(0,240,255,0.05);
+            border-bottom: 1px solid rgba(0,240,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .chat-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--neon-green);
+            font-size: 0.85rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            animation: status-blink 1.5s infinite;
+        }
+
+        @keyframes status-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(0,240,255,0.2);
+            border-radius: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            line-height: 1.5;
+            animation: message-in 0.3s ease;
+        }
+
+        @keyframes message-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.bot {
+            background: rgba(0,240,255,0.08);
+            border: 1px solid rgba(0,240,255,0.15);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.user {
+            background: rgba(191,0,255,0.12);
+            border: 1px solid rgba(191,0,255,0.2);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chat-input-area {
+            padding: 20px 25px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 14px 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0,240,255,0.15);
+        }
+
+        .chat-send {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-green));
+            border: none;
+            border-radius: 50%;
+            color: #000;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chat-send:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0,240,255,0.4);
+        }
+
+        /* ===== ROBOT BUILDER ===== */
+        .builder-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .builder-panel {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .builder-panel h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--neon-blue);
+        }
+
+        .component-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .component-item {
+            display: flex;
+            alig
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0,240,255,0.3);
+            box-shadow: 0 20px 60px rgba(0,240,255,0.1);
+        }
+
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .tool-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .tool-card p {
+            color: #888;
+            line-height: 1.6;
+        }
+
+        .tool-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-top: 15px;
+            font-weight: 700;
+        }
+
+        .tag-ai { background: rgba(0,240,255,0.15); color: var(--neon-blue); }
+        .tag-code { background: rgba(0,255,136,0.15); color: var(--neon-green); }
+        .tag-design { background: rgba(191,0,255,0.15); color: var(--neon-purple); }
+        .tag-hardware { background: rgba(255,102,0,0.15); color: var(--neon-orange); }
+
+        /* ===== AI CHAT SECTION ===== */
+        .ai-chat-section {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 25px;
+            border: 1px solid rgba(0,240,255,0.15);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 20px 25px;
+            background: rgba(0,240,255,0.05);
+            border-bottom: 1px solid rgba(0,240,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .chat-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--neon-green);
+            font-size: 0.85rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            animation: status-blink 1.5s infinite;
+        }
+
+        @keyframes status-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(0,240,255,0.2);
+            border-radius: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            line-height: 1.5;
+            animation: message-in 0.3s ease;
+        }
+
+        @keyframes message-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.bot {
+            background: rgba(0,240,255,0.08);
+            border: 1px solid rgba(0,240,255,0.15);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.user {
+            background: rgba(191,0,255,0.12);
+            border: 1px solid rgba(191,0,255,0.2);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chat-input-area {
+            padding: 20px 25px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 14px 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0,240,255,0.15);
+        }
+
+        .chat-send {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-green));
+            border: none;
+            border-radius: 50%;
+            color: #000;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chat-send:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0,240,255,0.4);
+        }
+
+        /* ===== ROBOT BUILDER ===== */
+        .builder-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .builder-panel {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .builder-panel h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--neon-blue);
+        }
+
+        .component-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .component-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .component-item:hover {
+            background: rgba(0,240,255,0.05);
+            border-color: rgba(0,240,255,0.2);
+        }
+
+        .component-item.selected {
+            background: rgba(0,240,255,0.1);
+            border-color: var(--neon-blue);
+        }
+
+        .component-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .component-emoji {
+            font-size: 1.5rem;
+        }
+
+        .component-price {
+            color: var(--neon-green);
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .robot-preview {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-robot {
+            font-size: 8rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .preview-specs {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .spec-label { color: #888; }
+        .spec-value { color: var(--neon-green); font-weight: 700; }
+
+        .total-price {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .total-price .label { color: #888; font-size: 0.9rem; }
+        .total-price .amount {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--neon-green);
+            font-weight: 900;
+        }
+
+        /* ===== CODE GENERATOR ===== */
+        .code-generator {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid rgba(0,240,255,0.15);
+            overflow: hidden;
+        }
+
+        .code-header {
+            padding: 20px 25px;
+            background: rgba(0,240,255,0.05);
+            border-bottom: 1px solid rgba(0,240,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-tabs {
+            display: flex;
+            gap: 5px;
+        }
+
+        .code-tab {
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: #888;
+            cursor: pointer;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .code-tab.active {
+            background: rgba(0,240,255,0.15);
+            color: var(--neon-blue);
+        }
+
+        .code-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .code-action-btn {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: transparent;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .code-action-btn:hover {
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+        }
+
+        .code-body {
+            padding: 25px;
+            background: #0d0d15;
+        }
+
+        .code-block {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: #ccc;
+            white-space: pre-wrap;
+            min-height: 300px;
+        }
+
+        .code-keyword { color: var(--neon-purple); }
+        .code-function { color: var(--neon-blue); }
+        .code-string { color: var(--neon-green); }
+        .code-comment { color: #555; font-style: italic; }
+        .code-number { color: var(--neon-orange); }
+
+        .code-controls {
+            padding: 15px 25px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .code-select {
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .generate-btn {
+            padding: 10px 25px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-green));
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .generate-btn:hover {
+            box-shadow: 0 0 20px rgba(0,240,255,0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOADING SCREEN -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader"></div>
+        <div class="loading-text">INITIALIZING ROBOFORGE AI...</div>
+    </div>
+
+    <!-- PARTICLES -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">ROBO<span>FORGE</span> AI</div>
+        <ul class="nav-links">
+            <li><a href="#tools">Tools</a></li>
+            <li><a href="#chat">AI Chat</a></li>
+            <li><a href="#builder">Builder</a></li>
+            <li><a href="#code">Code Gen</a></li>
+            <li><a href="#circuit">Circuit</a></li>
+            <li><a href="#simulator">Simulator</a></li>
+        </ul>
+        <button class="nav-btn" onclick="alert('🤖 Welcome to RoboForge!')">🚀 START BUILDING</button>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">⚡ AI-Powered Robot Building Platform v3.0</div>
+            <h1>
+                <span class="glitch" data-text="BUILD CRAZY">BUILD CRAZY</span><br>
+                <span class="gradient-text">ROBOTS WITH AI</span>
+            </h1>
+            <p>Design, Code, Simulate & Build Real Robots using our AI-powered platform. 
+               From concept to reality — in minutes, not months! 🤖🔥</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="scrollToSection('tools')">🛠️ EXPLORE TOOLS</button>
+                <button class="btn-secondary" onclick="scrollToSection('builder')">🤖 BUILD ROBOT</button>
+            </div>
+
+            <!-- ANIMATED ROBOT -->
+            <div class="robot-3d-container">
+                <div class="robot-3d">
+                    <div class="robot-antenna"></div>
+                    <div class="robot-head">
+                        <div class="robot-eyes">
+                            <div class="robot-eye"></div>
+                            <div class="robot-eye"></div>
+                        </div>
+                        <div class="robot-mouth"></div>
+                    </div>
+                    <div class="robot-body">
+                        <div class="robot-core"></div>
+                        <div class="robot-arms">
+                            <div class="robot-arm left"></div>
+                            <div class="robot-arm right"></div>
+                        </div>
+                    </div>
+                    <div class="robot-legs">
+                        <div class="robot-leg"></div>
+                        <div class="robot-leg"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="stat1">0</div>
+                    <div class="stat-label">Robots Built</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="stat2">0</div>
+                    <div class="stat-label">AI Models</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="stat3">0</div>
+                    <div class="stat-label">Components</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="stat4">0</div>
+                    <div class="stat-label">Users</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOOLS SECTION -->
+    <section class="section" id="tools">
+        <h2 class="section-title fade-in">🛠️ <span class="highlight">AI TOOLS</span> FOR ROBOT BUILDERS</h2>
+        <p class="section-subtitle fade-in">Everything you need to build, code, and simulate robots</p>
+        <div class="tools-grid">
+            <div class="tool-card fade-in" onclick="scrollToSection('chat')">
+                <div class="tool-icon">🧠</div>
+                <h3>AI Robot Assistant</h3>
+                <p>Chat with our AI to get robot building advice, troubleshooting, and code suggestions in real-time.</p>
+                <span class="tool-tag tag-ai">AI POWERED</span>
+            </div>
+            <div class="tool-card fade-in" onclick="scrollToSection('builder')">
+                <div class="tool-icon">🏗️</div>
+                <h3>Visual Robot Builder</h3>
+                <p>Drag & drop components to design your robot. AI suggests optimal configurations automatically.</p>
+                <span class="tool-tag tag-design">DRAG & DROP</span>
+            </div>
+            <div class="tool-card fade-in" onclick="scrollToSection('code')">
+                <div class="tool-icon">💻</div>
+                <h3>AI Code Generator</h3>
+                <p>Generate Arduino, Python, ROS code instantly. Describe what you want, AI writes the code.</p>
+                <span class="tool-tag tag-code">CODE GEN</span>
+            </div>
+            <div class="tool-card fade-in" onclick="scrollToSection('circuit')">
+                <div class="tool-icon">⚡</div>
+                <h3>Circuit Designer</h3>
+                <p>Design and simulate electronic circuits for your robots. Auto-routing and DRC checking included.</p>
+                <span class="tool-tag tag-hardware">HARDWARE</span>
+            </div>
+            <div class="tool-card fade-in" onclick="scrollToSection('nn')">
+                <div class="tool-icon">🔬</div>
+                <h3>Neural Network Designer</h3>
+                <p>Build and train neural networks for robot vision, navigation, and decision making.</p>
+                <span class="tool-tag tag-ai">DEEP LEARNING</span>
+            </div>
+            <div class="tool-card fade-in" onclick="scrollToSection('simulator')">
+                <div class="tool-icon">🎮</div>
+                <h3>Robot Simulator</h3>
+                <p>Test your robot in a 3D physics simulation before building. Save time and money!</p>
+                <span class="tool-tag tag-design">SIMULATION</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI CHAT SECTION -->
+    <section class="section" id="chat">
+        <h2 class="section-title fade-in">🧠 <span class="highlight">AI ROBOT</span> ASSISTANT</h2>
+        <p class="section-subtitle fade-in">Ask anything about robotics, AI gets instant answers</p>
+        <div class="ai-chat-section fade-in">
+            <div class="chat-header">
+                <div class="chat-avatar">🤖</div>
+                <div>
+                    <strong>RoboForge AI</strong>
+                    <div class="chat-status">
+                        <div class="status-dot"></div>
+                        Online • Ready to help
+                    </div>
+                </div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    👋 Namaste! Main hoon RoboForge AI Assistant. Aap mujhse robot building ke baare mein kuch bhi pooch sakte hain! 
+                    <br><br>
+                    Try these:
+                    <br>• "Arduino se robot kaise banaye?"
+                    <br>• "Line following robot code"
+                    <br>• "Best sensors for robot?"
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Type your robot question..." onkeypress="if(event.key==='Enter')sendMessage()">
+                <button class="chat-send" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROBOT BUILDER SECTION -->
+    <section class="section" id="builder">
+        <h2 class="section-title fade-in">🏗️ <span class="highlight">ROBOT</span> BUILDER</h2>
+        <p class="section-subtitle fade-in">Select components and build your dream robot</p>
+        <div class="builder-container fade-in">
+            <div class="builder-panel">
+                <h3>📦 Select Components</h3>
+                <div class="component-list" id="componentList">
+                    <div class="component-item" onclick="toggleComponent(this, 'Arduino Uno', 25)" data-name="Arduino Uno" data-price="25">
+                        <div class="component-name"><span class="component-emoji">🔷</span> Arduino Uno R3</div>
+                        <span class="component-price">$25</span>
+                    </div>
+                    <div class="component-item" onclick="toggleComponent(this, 'Raspberry Pi', 45)" data-name="Raspberry Pi" data-price="45">
+                        <div class="component-name"><span class="component-emoji">🟢</span> Raspberry Pi 4</div>
+                        <span class="component-price">$45</span>
+                    </div>
+                    <div class="component-item" onclick="toggleComponent(this, 'DC Motors x2', 15)" data-name="DC Motors x2" data-price="15">
+                        <div class="component-name"><span class="component-emoji">⚙️</span> DC Motors (x2)</div>
+         // ===== LOADING SCREEN =====
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 2000);
+        });
+
+        // ===== PARTICLES =====
+        const pCanvas = document.getElementById('particles-canvas');
+        const pCtx = pCanvas.getContext('2d');
+        let particles = [];
+
+        function resizeParticles() {
+            pCanvas.width = window.innerWidth;
+            pCanvas.height = window.innerHeight;
+        }
+        resizeParticles();
+        window.addEventListener('resize', resizeParticles);
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * pCanvas.width;
+                this.y = Math.random() * pCanvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.1;
+                this.color = ['#00f0ff', '#00ff88', '#bf00ff', '#ff006e'][Math.floor(Math.random() * 4)];
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > pCanvas.width || this.y < 0 || this.y > pCanvas.height) {
+                    this.reset();
+                }
+            }
+            draw() {
+                pCtx.beginPath();
+                pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                pCtx.fillStyle = this.color;
+                pCtx.globalAlpha = this.opacity;
+                pCtx.fill();
+                pCtx.globalAlpha = 1;
+            }
+        }
+
+        for (let i = 0; i < 100; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            // Draw connections
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        pCtx.beginPath();
+                        pCtx.moveTo(particles[i].x, particles[i].y);
+                        pCtx.lineTo(particles[j].x, particles[j].y);
+                        pCtx.strokeStyle = `rgba(0, 240, 255, ${0.05 * (1 - dist / 120)})`;
+                        pCtx.lineWidth = 0.5;
+                        pCtx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // ===== COUNTER ANIMATION =====
+        function animateCounter(el, target, suffix = '') {
+            let current = 0;
+            const step = target / 60;
+            const interval = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(interval);
+                }
+                el.textContent = Math.floor(current).toLocaleString() + suffix;
+            }, 30);
+        }
+
+        setTimeout(() => {
+            animateCounter(document.getElementById('stat1'), 15420, '+');
+            animateCounter(document.getElementById('stat2'), 250, '+');
+            animateCounter(document.getElementById('stat3'), 5000, '+');
+            animateCounter(document.getElementById('stat4'), 50000, '+');
+        }, 2500);
+
+        // ===== SCROLL ANIMATIONS =====
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // ===== SMOOTH SCROLL =====
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ===== AI CHAT =====
+        const chatResponses = {
+            'arduino': `🤖 **Arduino Robot Banana bahut easy hai!**
+
+Step 1: Arduino Uno board lein
+Step 2: DC Motors + L298N Motor Driver connect karein
+Step 3: Ultrasonic Sensor (HC-SR04) lagayein
+Step 4: Code upload karein
+Step 5: Robot ready! 🎉
+
+Mere Code Generator tool se instant code mil jayega! 💻`,
+
+            'line': `🤖 **Line Following Robot Code:**
+
+Main aapke liye complete Arduino code generate kar sakta hoon! 
+
+📌 Components needed:
+• Arduino Uno
+• IR Sensors (3x)
+• Motor Driver L298N
+• DC Motors (2x)
+• Robot Chassis
+
+Code Generator section mein jao aur "Line Following" select karo! 🔥`,
+
+            'sensor': `🤖 **Best Sensors for Robots:**
+
+1. 📡 **HC-SR04** - Distance measuring (2cm-400cm)
+2. 🔴 **IR Sensor** - Line following, obstacle detection
+3. 🌡️ **DHT11** - Temperature & Humidity
+4. 📷 **Pi Camera** - Computer Vision
+5. 🧭 **MPU6050** - Gyroscope + Accelerometer
+6. 🔊 **Sound Sensor** - Clap detection
+
+Aap kis type ka robot bana rahe hain? 🤔`,
+
+            'default': `🤖 Great question! Main aapki help kar sakta hoon:
+
+🔧 **Robot Types:**
+• Line Following Robot
+• Obstacle Avoidance Robot
+• Bluetooth Controlled Robot
+• Robotic Arm
+• Drone
+• Humanoid Robot
+
+📚 **Topics:**
+• Arduino Programming
+• Sensor Integration
+• Motor Control
+• AI & Machine Learning
+• Circuit Design
+
+Kya specific jaanna hai? Main detail mein bataunga! 💪`
+        };
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const messagesDiv = document.getElementById('chatMessages');
+            
+            // User message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.textContent = msg;
+            messagesDiv.appendChild(userMsg);
+            
+            input.value = '';
+
+            // Bot response
+            setTimeout(() => {
+                const botMsg = document.createElement('div');
+                botMsg.className = 'message bot';
+                
+                let response = chatResponses.default;
+                const lower = msg.toLowerCase();
+                if (lower.includes('arduino')) response = chatResponses.arduino;
+                else if (lower.includes('line')) response = chatResponses.line;
+                else if (lower.includes('sensor')) response = chatResponses.sensor;
+                
+                botMsg.innerHTML = response.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                messagesDiv.appendChild(botMsg);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }, 1000);
+
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // ===== ROBOT BUILDER =====
+        let selectedComponents = [];
+        let totalPrice = 0;
+
+        function toggleComponent(el, name, price) {
+            el.classList.toggle('selected');
+            
+            if (el.classList.contains('selected')) {
+                selectedComponents.push({ name, price });
+                totalPrice += price;
+            } else {
+                selectedComponents = selectedComponents.filter(c => c.name !== name);
+                totalPrice -= price;
+            }
+
+            document.getElementById('totalPrice').textContent = '$' + totalPrice;
+            document.getElementById('specCount').textContent = selectedComponents.length;
+
+            // Determine robot type
+            const names = selectedComponents.map(c => c.name);
+            let type = 'Not Defined';
+            let ai = 'None';
+            let power = 'No Battery';
+
+            if (names.includes('Arduino Uno')) { type = 'Arduino Robot'; }
+            if (names.includes('Raspberry Pi')) { type = 'Smart Robot'; ai = 'AI Ready'; }
+            if (names.includes('Camera Module')) { ai = 'Computer Vision'; }
+            if (names.includes('IR Sensors x3')) { type = 'Line Follower'; }
+            if (names.includes('Ultrasonic Sensor')) { type = 'Obstacle Avoider'; }
+            if (names.includes('Servo Motor')) { type = 'Articulated Robot'; }
+            if (names.includes('LiPo Battery')) { power = '11.1V LiPo'; }
+
+            if (names.includes('Arduino Uno') && names.includes('Ultrasonic Sensor')) {
+                type = 'Obstacle Avoidance Bot';
+            }
+
+            document.getElementById('specType').textContent = type;
+            document.getElementById('specAI').textContent = ai;
+            document.getElementById('specPower').textContent = power;
+
+            // Update preview emoji
+            const emoji = document.getElementById('previewRobot');
+            if (selectedComponents.length === 0) emoji.textContent = '🤖';
+            else if (selectedComponents.length < 3) emoji.textContent = '🔧';
+            else if (selectedComponents.length < 6) emoji.textContent = '🤖';
+            else emoji.textContent = '🦾';
+        }
+
+        // ===== CODE GENERATOR =====
+        const codeTemplates = {
+            line: {
+                arduino: `<span class="code-comment">// 🤖 Line Following Robot - Arduino</span>
+<span class="code-comment">// Generated by RoboForge AI</span>
+
+<span class="code-keyword">#include</span> <span class="code-string">&lt;Servo.h&gt;</span>
+
+<span class="code-keyword">#define</span> <span class="code-function">LEFT_SENSOR</span> <span class="code-number">A0</span>
+<span class="code-keyword">#define</span> <span class="code-function">RIGHT_SENSOR</span> <span class="code-number">A1</span>
+<span class="code-keyword">#define</span> <span class="code-function">LEFT_MOTOR</span> <span class="code-number">9</span>
+<span class="code-keyword">#define</span> <span class="code-function">RIGHT_MOTOR</span> <span class="code-number">10</span>
+
+<span class="code-function">Servo</span> leftM, rightM;
+
+<span class="code-keyword">void</span> <span class="code-function">setup</span>() {
+  leftM.<span class="code-function">attach</span>(LEFT_MOTOR);
+  rightM.<span class="code-function">attach</span>(RIGHT_MOTOR);
+  <span class="code-function">Serial</span>.<span class="code-function">begin</span>(<span class="code-number">9600</span>);
+}
+
+<span class="code-keyword">void</span> <span class="code-function">loop</span>() {
+  <span class="code-keyword">int</span> L = <span class="code-function">analogRead</span>(LEFT_SENSOR);
+  <span class="code-keyword">int</span> R = <span class="code-function">analogRead</span>(RIGHT_SENSOR);
+  
+  <span class="code-keyword">if</span>(L > <span class="code-number">500</span> && R > <span class="code-number">500</span>) <span class="code-function">forward</span>();
+  <span class="code-keyword">else if</span>(L < <span class="code-number">500</span>) <span class="code-function">turnLeft</span>();
+  <span class="code-keyword">else if</span>(R < <span class="code-number">500</span>) <span class="code-function">turnRight</span>();
+  <span class="code-keyword">else</span> <span class="code-function">stop</span>();
+}`,
+                python: `<span class="code-comment"># 🤖 Line Following Robot - Python (Raspberry Pi)</span>
+<span class="code-comment"># Generated by RoboForge AI</span>
+
+<span class="code-keyword">import</span> RPi.GPIO <span class="code-keyword">as</span> gpio
+<span class="code-keyword">import</span> time
+
+LEFT_SENSOR = <span class="code-number">17</span>
+RIGHT_SENSOR = <span class="code-number">27</span>
+LEFT_MOTOR = <span class="code-number">18</span>
+RIGHT_MOTOR = <span class="code-number">22</span>
+
+gpio.<span class="code-function">setmode</span>(gpio.BCM)
+gpio.<span class="code-function">setup</span>([LEFT_SENSOR, RIGHT_SENSOR], gpio.IN)
+
+<span class="code-keyword">def</span> <span class="code-function">forward</span>():
+    gpio.output(LEFT_MOTOR, <span class="code-number">1</span>)
+    gpio.output(RIGHT_MOTOR, <span class="code-number">1</span>)
+
+<span class="code-keyword">while</span> <span class="code-number">True</span>:
+    <span class="code-keyword">if</span> gpio.input(LEFT_SENSOR) <span class="code-keyword">and</span> gpio.input(RIGHT_SENSOR):
+        <span class="code-function">forward</span>()
+    <span class="code-keyword">elif</span> <span class="code-keyword">not</span> gpio.input(LEFT_SENSOR):
+        <span class="code-function">turn_left</span>()
+    <span class="code-keyword">elif</span> <span class="code-keyword">not</span> gpio.input(RIGHT_SENSOR):
+        <span class="code-function">turn_right</span>()
+    time.<span class="code-function">sleep</span>(<span class="code-number">0.01</span>)`,
+                ros: `<span class="code-comment">// 🤖 Line Following - ROS2 Node</span>
+<span class="code-comment">// Generated by RoboForge AI</span>
+
+<span class="code-keyword">#include</span> <span class="code-string">"rclcpp/rclcpp.hpp"</span>
+<span class="code-keyword">#include</span> <span class="code-string">"geometry_msgs/msg/twist.hpp"</span>
+
+<span class="code-keyword">class</span> <span class="code-function">LineFollower</span> : <span class="code-keyword">public</span> rclcpp::Node {
+<span class="code-keyword">public</span>:
+  <span class="code-function">LineFollower</span>() : <span class="code-function">Node</span>(<span class="code-string">"line_follower"</span>) {
+    cmd_pub_ = <span class="code-function">create_publisher</span>&lt;Twist&gt;(<span class="code-string">"/cmd_vel"</span>, <span class="code-number">10</span>);
+    timer_ = <span class="code-function">create_wall_timer</span>(
+      <span class="code-number">50ms</span>, <span class="code-function">bind</span>(&amp;LineFollower::<span class="code-function">callback</span>, <span class="code-keyword">this</span>));
+  }
+
+<span class="code-keyword">private</span>:
+  <span class="code-keyword">void</span> <span class="code-function">callback</span>() {
+    <span class="code-comment">// Read sensors, publish velocity</span>
+    Twist msg;
+    msg.linear.x = <span class="code-number">0.5</span>;
+    cmd_pub_-&gt;<span class="code-function">publish</span>(msg);
+  }
+};`
+            },
+            obstacle: {
+                arduino: `<span class="code-comment">// 🤖 Obstacle Avoidance Robot - Arduino</span>
+<span class="code-comment">// Generated by RoboForge AI</span>
+
+<span class="code-keyword">#include</span> <span class="code-string">&lt;Servo.h&gt;</span>
+
+<span class="code-keyword">#define</span> <span class="code-function">TRIG</span> <span class="code-number">2</span>
+<span class="code-keyword">#define</span> <span class="code-function">ECHO</span> <span class="code-number">3</span>
+<span class="code-keyword">#define</span> <span class="code-function">LEFT_MOTOR</span> <span class="code-number">9</span>
+<span class="code-keyword">#define</span> <span class="code-function">RIGHT_MOTOR</span> <span class="code-number">10</span>
+
+<span class="code-function">Servo</span> leftM, rightM;
+<span class="code-keyword">const int</span> <span class="code-function">SAFE_DIST</span> = <span class="code-number">20</span>; <span class="code-comment">// cm</span>
+
+<span class="code-keyword">void</span> <span class="code-function">setup</span>() {
+  <span class="code-function">pinMode</span>(TRIG, OUTPUT);
+  <span class="code-function">pinMode</span>(ECHO, INPUT);
+  leftM.<span class="code-function">attach</span>(LEFT_MOTOR);
+  rightM.<span class="code-function">attach</span>(RIGHT_MOTOR);
+}
+
+<span class="code-keyword">long</span> <span class="code-function">getDistance</span>() {
+  <span class="code-function">digitalWrite</span>(TRIG, LOW);
+  <span class="code-function">delayMicroseconds</span>(<span class="code-number">2</span>);
+  <span class="code-function">digitalWrite</span>(TRIG, HIGH);
+  <span class="code-function">delayMicroseconds</span>(<span class="code-number">10</span>);
+  <span class="code-function">digitalWrite</span>(TRIG, LOW);
+  <span class="code-keyword">return</span> <span class="code-function">pulseIn</span>(ECHO, HIGH) * <span class="code-number">0.034</span> / <span class="code-number">2</span>;
+}
+
+<span class="code-keyword">void</span> <span class="code-function">loop</span>() {
+  <span class="code-keyword">long</span> dist = <span class="code-function">getDistance</span>();
+  <span class="code-keyword">if</span> (dist > SAFE_DIST) {
+    <span class="code-function">forward</span>();
+  } <span class="code-keyword">else</span> {
+    <span class="code-function">stop</span>(); <span class="code-function">delay</span>(<span class="code-number">500</span>);
+    <span class="code-function">turnRight</span>(); <span class="code-function">delay</span>(<span class="code-number">300</span>);
+  }
+}`
+            }
+        };
+
+        function generateCode() {
+            const robotType = document.getElementById('robotType').value;
+            const boardType = document.getElementById('boardType').value;
+            const codeBlock = document.getElementById('codeBlock');
+            
+            let code = codeTemplates[robotType]?.[boardType] || codeTemplates[robotType]?.arduino;
+            
+            if (!code) {
+                code = `<span class="code-comment">// 🤖 ${robotType.toUpperCase()} Robot Code</span>
+<span class="code-comment">// Board: ${boardType.toUpperCase()}</span>
+<span class="code-comment">// Generated by RoboForge AI Engine v3.0</span>
+
+<span class="code-comment">// Code generation in progress...</span>
+<span class="code-comment">// Select a supported robot type for full code</span>
+
+<span class="code-keyword">void</span> <span class="code-function">setup</span>() {
+  <span class="code-comment">// Initialize robot components</span>
+  <span class="code-function">Serial</span>.<span class="code-function">begin</span>(<span class="code-number">9600</span>);
+  <span class="code-function">Serial</span>.<span class="code-function">println</span>(<span class="code-string">"🤖 Robot Ready!"</span>);
+}
+
+<span class="code-keyword">void</span> <span class="code-function">loop</span>() {
+  <span class="code-comment">// Main robot logic</span>
+  <span class="code-function">delay</span>(<span class="code-number">100</span>);
+}`;
+            }
+
+            codeBlock.innerHTML = code;
+            codeBlock.style.opacity = '0';
+            setTimeout(() => {
+                codeBlock.style.transition = 'opacity 0.3s';
+                codeBlock.style.opacity = '1';
+            }, 100);
+        }
+
+        function switchTab(el, lang) {
+            document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function copyCode() {
+            const text = document.getElementById('codeBlock').textContent;
+            navigator.clipboard.writeText(text);
+            alert('📋 Code copied to clipboard!');
+        }
+
+        function downloadCode() {
+            const text = document.getElementById('codeBlock').textContent;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'robocode.ino';
+            a.click();
+        }      
+                // ===== CIRCUIT DESIGNER =====
+        const circuitCanvas = document.getElementById('circuit-canvas');
+        const cCtx = circuitCanvas.getContext('2d');
+        let circuitTool = 'resistor';
+        let circuitComponents = [];
+
+        function resizeCircuit() {
+            circuitCanvas.width = circuitCanvas.parentElement.offsetWidth;
+            circuitCanvas.height = 400;
+        }
+        resizeCircuit();
+        window.addEventListener('resize', resizeCircuit);
+
+        function setCircuitTool(el, tool) {
+            document.querySelectorAll('.circuit-tool').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            circuitTool = tool;
+        }
+
+        const toolEmojis = {
+            resistor: '', led: '💡', capacitor: '🔋', wire: '〰️', ic: '🔲', motor: '️'
+        };
+
+        circuitCanvas.addEventListener('click', (e) => {
+            const rect = circuitCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            circuitComponents.push({
+                type: circuitTool,
+                x, y,
+                emoji: toolEmojis[circuitTool],
+                time: Date.now()
+            });
+            drawCircuit();
+        });
+
+        function drawCircuit() {
+            cCtx.clearRect(0, 0, circuitCanvas.width, circuitCanvas.height);
+            
+            // Grid
+            cCtx.strokeStyle = 'rgba(0,240,255,0.05)';
+            cCtx.lineWidth = 1;
+            for (let x = 0; x < circuitCanvas.width; x += 30) {
+                cCtx.beginPath();
+                cCtx.moveTo(x, 0);
+                cCtx.lineTo(x, circuitCanvas.height);
+                cCtx.stroke();
+            }
+            for (let y = 0; y < circuitCanvas.height; y += 30) {
+                cCtx.beginPath();
+                cCtx.moveTo(0, y);
+                cCtx.lineTo(circuitCanvas.width, y);
+                cCtx.stroke();
+            }
+
+            // Components
+            circuitComponents.forEach(c => {
+                // Glow
+                cCtx.beginPath();
+                cCtx.arc(c.x, c.y, 25, 0, Math.PI * 2);
+                cCtx.fillStyle = 'rgba(0,240,255,0.1)';
+                cCtx.fill();
+
+                // Emoji
+                cCtx.font = '24px serif';
+                cCtx.textAlign = 'center';
+                cCtx.textBaseline = 'middle';
+                cCtx.fillText(c.emoji, c.x, c.y);
+
+                // Label
+                cCtx.font = '10px Orbitron';
+                cCtx.fillStyle = '#888';
+                cCtx.fillText(c.type.toUpperCase(), c.x, c.y + 22);
+            });
+
+            // Draw wires between nearby components
+            for (let i = 0; i < circuitComponents.length; i++) {
+                for (let j = i + 1; j < circuitComponents.length; j++) {
+                    const a = circuitComponents[i];
+                    const b = circuitComponents[j];
+                    const dist = Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+                    if (dist < 150) {
+                        cCtx.beginPath();
+                        cCtx.moveTo(a.x, a.y);
+                        cCtx.lineTo(b.x, b.y);
+                        cCtx.strokeStyle = 'rgba(0,255,136,0.3)';
+                        cCtx.lineWidth = 2;
+                        cCtx.stroke();
+                    }
+                }
+            }
+        }
+
+        function clearCircuit() {
+            circuitComponents = [];
+            drawCircuit();
+        }
+
+        // Initial draw
+        setTimeout(drawCircuit, 100);
+
+        // ===== NEURAL NETWORK VISUALIZER =====
+        const nnCanvas = document.getElementById('nn-canvas');
+        const nnCtx = nnCanvas.getContext('2d');
+        let nnNodes = [];
+        let nnConnections = [];
+        let nnPulses = [];
+
+        function resizeNN() {
+            nnCanvas.width = nnCanvas.parentElement.offsetWidth - 60;
+            nnCanvas.height = 350;
+        }
+        resizeNN();
+        window.addEventListener('resize', () => { resizeNN(); updateNeuralNet(); });
+
+        function updateNeuralNet() {
+            const layers = parseInt(document.getElementById('nnLayers').value);
+            nnNodes = [];
+            nnConnections = [];
+            nnPulses = [];
+
+            const layerSizes = [4, 6, 8, 6, 4].slice(0, Math.min(layers, 5));
+            if (layers > 5) {
+                for (let i = 5; i < layers; i++) layerSizes.push(4);
+            }
+
+            const layerGap = nnCanvas.width / (layerSizes.length + 1);
+            
+            layerSizes.forEach((size, li) => {
+                const x = layerGap * (li + 1);
+                const nodeGap = nnCanvas.height / (size + 1);
+                
+                for (let ni = 0; ni < size; ni++) {
+                    const y = nodeGap * (ni + 1);
+                    nnNodes.push({
+                        x, y,
+                        layer: li,
+                        index: ni,
+                        activation: Math.random(),
+                        radius: 8 + Math.random() * 4
+                    });
+                }
+            });
+
+            // Create connections
+            for (let i = 0; i < nnNodes.length; i++) {
+                for (let j = 0; j < nnNodes.length; j++) {
+                    if (nnNodes[j].layer === nnNodes[i].layer + 1) {
+                        nnConnections.push({ from: i, to: j, weight: Math.random() });
+                    }
+                }
+            }
+        }
+
+        function animateNN() {
+            nnCtx.clearRect(0, 0, nnCanvas.width, nnCanvas.height);
+            const speed = parseInt(document.getElementById('nnSpeed').value) / 5;
+
+            // Draw connections
+            nnConnections.forEach(c => {
+                const from = nnNodes[c.from];
+                const to = nnNodes[c.to];
+                
+                const alpha = 0.05 + c.weight * 0.15;
+                nnCtx.beginPath();
+                nnCtx.moveTo(from.x, from.y);
+                nnCtx.lineTo(to.x, to.y);
+                nnCtx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
+                nnCtx.lineWidth = 0.5 + c.weight * 1.5;
+                nnCtx.stroke();
+            });
+
+            // Animate nodes
+            nnNodes.forEach(node => {
+                node.activation = 0.3 + Math.sin(Date.now() / 1000 * speed + node.x + node.y) * 0.7;
+                node.activation = Math.max(0, Math.min(1, node.activation));
+
+                // Glow
+                const gradient = nnCtx.createRadialGradient(node.x, node.y, 0, node.x, node.y, node.radius * 3);
+                gradient.addColorStop(0, `rgba(0, 240, 255, ${node.activation * 0.3})`);
+                gradient.addColorStop(1, 'transparent');
+                nnCtx.beginPath();
+                nnCtx.arc(node.x, node.y, node.radius * 3, 0, Math.PI * 2);
+                nnCtx.fillStyle = gradient;
+                nnCtx.fill();
+
+                // Node
+                nnCtx.beginPath();
+                nnCtx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                const color = node.activation > 0.5 ? '0, 255, 136' : '0, 240, 255';
+                nnCtx.fillStyle = `rgba(${color}, ${0.3 + node.activation * 0.7})`;
+                nnCtx.fill();
+                nnCtx.strokeStyle = `rgba(${color}, 0.5)`;
+                nnCtx.lineWidth = 1.5;
+                nnCtx.stroke();
+            });
+
+            // Draw pulses along connections
+            if (Math.random() < 0.05 * speed) {
+                const conn = nnConnections[Math.floor(Math.random() * nnConnections.length)];
+                if (conn) {
+                    nnPulses.push({
+                        from: nnNodes[conn.from],
+                        to: nnNodes[conn.to],
+                        progress: 0,
+                        speed: 0.02 * speed
+                    });
+                }
+            }
+
+            nnPulses = nnPulses.filter(p => {
+                p.progress += p.speed;
+                if (p.progress > 1) return false;
+
+                const x = p.from.x + (p.to.x - p.from.x) * p.progress;
+                const y = p.from.y + (p.to.y - p.from.y) * p.progress;
+
+                nnCtx.beginPath();
+                nnCtx.arc(x, y, 4, 0, Math.PI * 2);
+                nnCtx.fillStyle = 'rgba(0, 255, 136, 0.8)';
+                nnCtx.fill();
+
+                nnCtx.beginPath();
+                nnCtx.arc(x, y, 8, 0, Math.PI * 2);
+                nnCtx.fillStyle = 'rgba(0, 255, 136, 0.2)';
+                nnCtx.fill();
+
+                return true;
+            });
+
+            // Labels
+            nnCtx.font = '10px Orbitron';
+            nnCtx.fillStyle = '#666';
+            const layerSet = new Set(nnNodes.map(n => n.layer));
+            const layerGap = nnCanvas.width / (Math.max(...layerSet) + 2);
+            let labels = ['Input', 'Hidden', 'Hidden', 'Hidden', 'Hidden', 'Hidden', 'Hidden', 'Output'];
+            layerSet.forEach(l => {
+                const x = layerGap * (l + 1);
+                nnCtx.textAlign = 'center';
+                nnCtx.fillText(labels[l] || `Layer ${l}`, x, 20);
+            });
+
+            requestAnimationFrame(animateNN);
+        }
+
+        updateNeuralNet();
+        animateNN();
+
+        // ===== ROBOT SIMULATOR =====
+        const simCanvas = document.getElementById('sim-canvas');
+        const sCtx = simCanvas.getContext('2d');
+        let simRunning = false;
+        let simRobot = { x: 100, y: 225, angle: 0, speed: 0 };
+        let simObstacles = [];
+        let simBattery = 100;
+        let simDistance = 0;
+
+        function resizeSim() {
+            simCanvas.width = simCanvas.parentElement.offsetWidth;
+            simCanvas.height = 450;
+        }
+        resizeSim();
+        window.addEventListener('resize', resizeSim);
+
+        // Generate obstacles
+        for (let i = 0; i < 15; i++) {
+            simObstacles.push({
+                x: Math.random() * 800 + 50,
+                y: Math.random() * 350 + 50,
+                w: 30 + Math.random() * 60,
+                h: 30 + Math.random() * 60,
+                color: `hsl(${Math.random() * 360}, 50%, 20%)`
+            });
+        }
+
+        function drawSimulator() {
+            sCtx.clearRect(0, 0, simCanvas.width, simCanvas.height);
+
+            // Background grid
+            sCtx.strokeStyle = 'rgba(0,240,255,0.03)';
+            for (let x = 0; x < simCanvas.width; x += 40) {
+                sCtx.beginPath();
+                sCtx.moveTo(x, 0);
+                sCtx.lineTo(x, simCanvas.height);
+                sCtx.stroke();
+            }
+            for (let y = 0; y < simCanvas.height; y += 40) {
+                sCtx.beginPath();
+                sCtx.moveTo(0, y);
+                sCtx.lineTo(simCanvas.width, y);
+                sCtx.stroke();
+            }
+
+            // Obstacles
+            simObstacles.forEach(o => {
+                sCtx.fillStyle = o.color;
+                sCtx.strokeStyle = 'rgba(0,240,255,0.2)';
+                sCtx.lineWidth = 1;
+                sCtx.fillRect(o.x, o.y, o.w, o.h);
+                sCtx.strokeRect(o.x, o.y, o.w, o.h);
+            });
+
+            // Robot sensor rays
+            if (simRunning) {
+                for (let a = -60; a <= 60; a += 30) {
+                    const rad = (simRobot.angle + a) * Math.PI / 180;
+                    const rayLen = 100;
+                    sCtx.beginPath();
+                    sCtx.moveTo(simRobot.x, simRobot.y);
+                    sCtx.lineTo(simRobot.x + Math.cos(rad) * rayLen, simRobot.y + Math.sin(rad) * rayLen);
+                    sCtx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+                    sCtx.lineWidth = 1;
+                    sCtx.stroke();
+                }
+            }
+
+            // Robot
+            sCtx.save();
+            sCtx.translate(simRobot.x, simRobot.y);
+            sCtx.rotate(simRobot.angle * Math.PI / 180);
+
+            // Body
+            sCtx.fillStyle = '#1a1a2e';
+            sCtx.strokeStyle = '#00f0ff';
+            sCtx.lineWidth = 2;
+            sCtx.beginPath();
+            sCtx.roundRect(-20, -15, 40, 30, 5);
+            sCtx.fill();
+            sCtx.stroke();
+
+            // Eyes
+            sCtx.fillStyle = '#00ff88';
+            sCtx.shadowColor = '#00ff88';
+            sCtx.shadowBlur = 10;
+            sCtx.beginPath();
+            sCtx.arc(-8, -5, 3, 0, Math.PI * 2);
+            sCtx.fill();
+            sCtx.beginPath();
+            sCtx.arc(8, -5, 3, 0, Math.PI * 2);
+            sCtx.fill();
+            sCtx.shadowBlur = 0;
+
+            // Direction indicator
+            sCtx.fillStyle = '#ff006e';
+            sCtx.beginPath();
+            sCtx.moveTo(22, 0);
+            sCtx.lineTo(15, -5);
+            sCtx.lineTo(15, 5);
+            sCtx.closePath();
+            sCtx.fill();
+
+            sCtx.restore();
+
+            // Update stats
+            document.getElementById('simX').textContent = Math.round(simRobot.x);
+            document.getElementById('simY').textContent = Math.round(simRobot.y);
+            document.getElementById('simSpeed').textContent = Math.round(simRobot.speed * 10);
+            document.getElementById('simDist').textContent = Math.round(simDistance);
+            document.getElementById('simBattery').textContent = Math.round(simBattery) + '%';
+        }
+
+        function updateSimulation() {
+            if (!simRunning) {
+                requestAnimationFrame(updateSimulation);
+                drawSimulator();
+                return;
+            }
+
+            // Random movement
+            simRobot.angle += (Math.random() - 0.5) * 5;
+            simRobot.speed = Math.min(simRobot.speed + 0.1, 3);
+            
+            const rad = simRobot.angle * Math.PI / 180;
+            simRobot.x += Math.cos(rad) * simRobot.speed;
+            simRobot.y += Math.sin(rad) * simRobot.speed;
+            simDistance += simRobot.speed;
+            simBattery -= 0.01;
+
+            // Bounce off walls
+            if (simRobot.x < 20 || simRobot.x > simCanvas.width - 20) {
+                simRobot.angle = 180 - simRobot.angle;
+                simRobot.x = Math.max(20, Math.min(simCanvas.width - 20, simRobot.x));
+            }
+            if (simRobot.y < 20 || simRobot.y > simCanvas.height - 20) {
+                simRobot.angle = -simRobot.angle;
+                simRobot.y = Math.max(20, Math.min(simCanvas.height - 20, simRobot.y));
+            }
+
+            // Check obstacle collision
+            simObstacles.forEach(o => {
+                if (simRobot.x > o.x - 20 && simRobot.x < o.x + o.w + 20 &&
+                    simRobot.y > o.y - 15 && simRobot.y < o.y + o.h + 15) {
+                    simRobot.angle += 90 + Math.random() * 180;
+                    simRobot.speed *= 0.5;
+                }
+            });
+
+            drawSimulator();
+            requestAnimationFrame(updateSimulation);
+        }
+
+        function toggleSimulation() {
+            simRunning = !simRunning;
+            const btn = document.getElementById('simPlayBtn');
+            btn.textContent = simRunning ? '⏸ PAUSE' : '▶ START';
+            btn.className = simRunning ? 'sim-btn pause' : 'sim-btn play';
+        }
+
+        function resetSimulation() {
+            simRunning = false;
+            simRobot = { x: 100, y: 225, angle: 0, speed: 0 };
+            simBattery = 100;
+            simDistance = 0;
+            document.getElementById('simPlayBtn').textContent = '▶ START';
+            document.getElementById('simPlayBtn').className = 'sim-btn play';
+            drawSimulator();
+        }
+
+        updateSimulation();
+
+        // ===== KEYBOARD SHORTCUT =====
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                scrollToSection('chat');
+            }
+        });
+
+        // ===== SMOOTH NAVBAR HIDE/SHOW =====
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                navbar.style.transform = 'translateY(0)';
+            }
+            navbar.style.transition = 'transform 0.3s';
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html>        // ===== CIRCUIT DESIGNER =====
+        const circuitCanvas = document.getElementById('circuit-canvas');
+        const cCtx = circuitCanvas.getContext('2d');
+        let circuitTool = 'resistor';
+        let circuitComponents = [];
+
+        function resizeCircuit() {
+            circuitCanvas.width = circuitCanvas.parentElement.offsetWidth;
+            circuitCanvas.height = 400;
+        }
+        resizeCircuit();
+        window.addEventListener('resize', resizeCircuit);
+
+        function setCircuitTool(el, tool) {
+            document.querySelectorAll('.circuit-tool').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            circuitTool = tool;
+        }
+
+        const toolEmojis = {
+            resistor: '⚡', led: '💡', capacitor: '🔋', wire: '〰️', ic: '🔲', motor: '️'
+        };
+
+        circuitCanvas.addEventListener('click', (e) => {
+            const rect = circuitCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            circuitComponents.push({
+                type: circuitTool,
+                x, y,
+                emoji: toolEmojis[circuitTool],
+                time: Date.now()
+            });
+            drawCircuit();
+        });
+
+        function drawCircuit() {
+            cCtx.clearRect(0, 0, circuitCanvas.width, circuitCanvas.height);
+            
+            // Grid
+            cCtx.strokeStyle = 'rgba(0,240,255,0.05)';
+            cCtx.lineWidth = 1;
+            for (let x = 0; x < circuitCanvas.width; x += 30) {
+                cCtx.beginPath();
+                cCtx.moveTo(x, 0);
+                cCtx.lineTo(x, circuitCanvas.height);
+                cCtx.stroke();
+            }
+            for (let y = 0; y < circuitCanvas.height; y += 30) {
+                cCtx.beginPath();
+                cCtx.moveTo(0, y);
+                cCtx.lineTo(circuitCanvas.width, y);
+                cCtx.stroke();
+            }
+
+            // Components
+            circuitComponents.forEach(c => {
+                cCtx.beginPath();
+                cCtx.arc(c.x, c.y, 25, 0, Math.PI * 2);
+                cCtx.fillStyle = 'rgba(0,240,255,0.1)';
+                cCtx.fill();
+
+                cCtx.font = '24px serif';
+                cCtx.textAlign = 'center';
+                cCtx.textBaseline = 'middle';
+                cCtx.fillText(c.emoji, c.x, c.y);
+
+                cCtx.font = '10px Orbitron';
+                cCtx.fillStyle = '#888';
+                cCtx.fillText(c.type.toUpperCase(), c.x, c.y + 22);
+            });
+
+            // Wires between nearby components
+            for (let i = 0; i < circuitComponents.length; i++) {
+                for (let j = i + 1; j < circuitComponents.length; j++) {
+                    const a = circuitComponents[i];
+                    const b = circuitComponents[j];
+                    const dist = Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
+                    if (dist < 150) {
+                        cCtx.beginPath();
+                        cCtx.moveTo(a.x, a.y);
+                        cCtx.lineTo(b.x, b.y);
+                        cCtx.strokeStyle = 'rgba(0,255,136,0.3)';
+                        cCtx.lineWidth = 2;
+                        cCtx.stroke();
+                    }
+                }
+            }
+        }
+
+        function clearCircuit() {
+            circuitComponents = [];
+            drawCircuit();
+        }
+
+        setTimeout(drawCircuit, 100);
+
+        // ===== NEURAL NETWORK VISUALIZER =====
+        const nnCanvas = document.getElementById('nn-canvas');
+        const nnCtx = nnCanvas.getContext('2d');
+        let nnNodes = [];
+        let nnConnections = [];
+        let nnPulses = [];
+
+        function resizeNN() {
+            nnCanvas.width = nnCanvas.parentElement.offsetWidth - 60;
+            nnCanvas.height = 350;
+        }
+        resizeNN();
+        window.addEventListener('resize', () => { resizeNN(); updateNeuralNet(); });
+
+        function updateNeuralNet() {
+            const layers = parseInt(document.getElementById('nnLayers').value);
+            nnNodes = [];
+            nnConnections = [];
+            nnPulses = [];
+
+            const layerSizes = [4, 6, 8, 6, 4].slice(0, Math.min(layers, 5));
+            if (layers > 5) {
+                for (let i = 5; i < layers; i++) layerSizes.push(4);
+            }
+
+            const layerGap = nnCanvas.width / (layerSizes.length + 1);
+            
+            layerSizes.forEach((size, li) => {
+                const x = layerGap * (li + 1);
+                const nodeGap = nnCanvas.height / (size + 1);
+                
+                for (let ni = 0; ni < size; ni++) {
+                    const y = nodeGap * (ni + 1);
+                    nnNodes.push({
+                        x, y, layer: li, index: ni,
+                        activation: Math.random(),
+                        radius: 8 + Math.random() * 4
+                    });
+                }
+            });
+
+            for (let i = 0; i < nnNodes.length; i++) {
+                for (let j = 0; j < nnNodes.length; j++) {
+                    if (nnNodes[j].layer === nnNodes[i].layer + 1) {
+                        nnConnections.push({ from: i, to: j, weight: Math.random() });
+                    }
+                }
+            }
+        }
+
+        function animateNN() {
+            nnCtx.clearRect(0, 0, nnCanvas.width, nnCanvas.height);
+            const speed = parseInt(document.getElementById('nnSpeed').value) / 5;
+
+            nnConnections.forEach(c => {
+                const from = nnNodes[c.from];
+                const to = nnNodes[c.to];
+                const alpha = 0.05 + c.weight * 0.15;
+                nnCtx.beginPath();
+                nnCtx.moveTo(from.x, from.y);
+                nnCtx.lineTo(to.x, to.y);
+                nnCtx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
+                nnCtx.lineWidth = 0.5 + c.weight * 1.5;
+                nnCtx.stroke();
+            });
+
+            nnNodes.forEach(node => {
+                node.activation = 0.3 + Math.sin(Date.now() / 1000 * speed + node.x + node.y) * 0.7;
+                node.activation = Math.max(0, Math.min(1, node.activation));
+
+                const gradient = nnCtx.createRadialGradient(node.x, node.y, 0, node.x, node.y, node.radius * 3);
+                gradient.addColorStop(0, `rgba(0, 240, 255, ${node.activation * 0.3})`);
+                gradient.addColorStop(1, 'transparent');
+                nnCtx.beginPath();
+                nnCtx.arc(node.x, node.y, node.radius * 3, 0, Math.PI * 2);
+                nnCtx.fillStyle = gradient;
+                nnCtx.fill();
+
+                nnCtx.beginPath();
+                nnCtx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                const color = node.activation > 0.5 ? '0, 255, 136' : '0, 240, 255';
+                nnCtx.fillStyle = `rgba(${color}, ${0.3 + node.activation * 0.7})`;
+                nnCtx.fill();
+                nnCtx.strokeStyle = `rgba(${color}, 0.5)`;
+                nnCtx.lineWidth = 1.5;
+                nnCtx.stroke();
+            });
+
+            if (Math.random() < 0.05 * speed) {
+                const conn = nnConnections[Math.floor(Math.random() * nnConnections.length)];
+                if (conn) {
+                    nnPulses.push({
+                        from: nnNodes[conn.from], to: nnNodes[conn.to],
+                        progress: 0, speed: 0.02 * speed
+                    });
+                }
+            }
+
+            nnPulses = nnPulses.filter(p => {
+                p.progress += p.speed;
+                if (p.progress > 1) return false;
+                const x = p.from.x + (p.to.x - p.from.x) * p.progress;
+                const y = p.from.y + (p.to.y - p.from.y) * p.progress;
+                nnCtx.beginPath();
+                nnCtx.arc(x, y, 4, 0, Math.PI * 2);
+                nnCtx.fillStyle = 'rgba(0, 255, 136, 0.8)';
+                nnCtx.fill();
+                nnCtx.beginPath();
+                nnCtx.arc(x, y, 8, 0, Math.PI * 2);
+                nnCtx.fillStyle = 'rgba(0, 255, 136, 0.2)';
+                nnCtx.fill();
+                return true;
+            });
+
+            nnCtx.font = '10px Orbitron';
+            nnCtx.fillStyle = '#666';
+            const layerSet = new Set(nnNodes.map(n => n.layer));
+            const layerGap = nnCanvas.width / (Math.max(...layerSet) + 2);
+            const labels = ['Input', 'Hidden', 'Hidden', 'Hidden', 'Hidden', 'Hidden', 'Hidden', 'Output'];
+            layerSet.forEach(l => {
+                const x = layerGap * (l + 1);
+                nnCtx.textAlign = 'center';
+                nnCtx.fillText(labels[l] || `Layer ${l}`, x, 20);
+            });
+
+            requestAnimationFrame(animateNN);
+        }
+
+        updateNeuralNet();
+        animateNN();
+
+        // ===== ROBOT SIMULATOR =====
+        const simCanvas = document.getElementById('sim-canvas');
+        const sCtx = simCanvas.getContext('2d');
+        let simRunning = false;
+        let simRobot = { x: 100, y: 225, angle: 0, speed: 0 };
+        let simObstacles = [];
+        let simBattery = 100;
+        let simDistance = 0;
+
+        function resizeSim() {
+            simCanvas.width = simCanvas.parentElement.offsetWidth;
+            simCanvas.height = 450;
+        }
+        resizeSim();
+        window.addEventListener('resize', resizeSim);
+
+        for (let i = 0; i < 15; i++) {
+            simObstacles.push({
+                x: Math.random() * 800 + 50,
+                y: Math.random() * 350 + 50,
+                w: 30 + Math.random() * 60,
+                h: 30 + Math.random() * 60,
+                color: `hsl(${Math.random() * 360}, 50%, 20%)`
+            });
+        }
+
+        function drawSimulator() {
+            sCtx.clearRect(0, 0, simCanvas.width, simCanvas.height);
+
+            sCtx.strokeStyle = 'rgba(0,240,255,0.03)';
+            for (let x = 0; x < simCanvas.width; x += 40) {
+                sCtx.beginPath(); sCtx.moveTo(x, 0); sCtx.lineTo(x, simCanvas.height); sCtx.stroke();
+            }
+            for (let y = 0; y < simCanvas.height; y += 40) {
+                sCtx.beginPath(); sCtx.moveTo(0, y); sCtx.lineTo(simCanvas.width, y); sCtx.stroke();
+            }
+
+            simObstacles.forEach(o => {
+                sCtx.fillStyle = o.color;
+                sCtx.strokeStyle = 'rgba(0,240,255,0.2)';
+                sCtx.lineWidth = 1;
+                sCtx.fillRect(o.x, o.y, o.w, o.h);
+                sCtx.strokeRect(o.x, o.y, o.w, o.h);
+            });
+
+            if (simRunning) {
+                for (let a = -60; a <= 60; a += 30) {
+                    const rad = (simRobot.angle + a) * Math.PI / 180;
+                    const rayLen = 100;
+                    sCtx.beginPath();
+                    sCtx.moveTo(simRobot.x, simRobot.y);
+                    sCtx.lineTo(simRobot.x + Math.cos(rad) * rayLen, simRobot.y + Math.sin(rad) * rayLen);
+                    sCtx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+                    sCtx.lineWidth = 1;
+                    sCtx.stroke();
+                }
+            }
+
+            sCtx.save();
+            sCtx.translate(simRobot.x, simRobot.y);
+            sCtx.rotate(simRobot.angle * Math.PI / 180);
+
+            sCtx.fillStyle = '#1a1a2e';
+            sCtx.strokeStyle = '#00f0ff';
+            sCtx.lineWidth = 2;
+            sCtx.beginPath();
+            sCtx.roundRect(-20, -15, 40, 30, 5);
+            sCtx.fill(); sCtx.stroke();
+
+            sCtx.fillStyle = '#00ff88';
+            sCtx.shadowColor = '#00ff88'; sCtx.shadowBlur = 10;
+            sCtx.beginPath(); sCtx.arc(-8, -5, 3, 0, Math.PI * 2); sCtx.fill();
+            sCtx.beginPath(); sCtx.arc(8, -5, 3, 0, Math.PI * 2); sCtx.fill();
+            sCtx.shadowBlur = 0;
+
+            sCtx.fillStyle = '#ff006e';
+            sCtx.beginPath();
+            sCtx.moveTo(22, 0); sCtx.lineTo(15, -5); sCtx.lineTo(15, 5);
+            sCtx.closePath(); sCtx.fill();
+
+            sCtx.restore();
+
+            document.getElementById('simX').textContent = Math.round(simRobot.x);
+            document.getElementById('simY').textContent = Math.round(simRobot.y);
+            document.getElementById('simSpeed').textContent = Math.round(simRobot.speed * 10);
+            document.getElementById('simDist').textContent = Math.round(simDistance);
+            document.getElementById('simBattery').textContent = Math.round(simBattery) + '%';
+        }
+
+        function updateSimulation() {
+            if (!simRunning) {
+                requestAnimationFrame(updateSimulation);
+                drawSimulator();
+                return;
+            }
+
+            simRobot.angle += (Math.random() - 0.5) * 5;
+            simRobot.speed = Math.min(simRobot.speed + 0.1, 3);
+            
+            const rad = simRobot.angle * Math.PI / 180;
+            simRobot.x += Math.cos(rad) * simRobot.speed;
+            simRobot.y += Math.sin(rad) * simRobot.speed;
+            simDistance += simRobot.speed;
+            simBattery -= 0.01;
+
+            if (simRobot.x < 20 || simRobot.x > simCanvas.width - 20) {
+                simRobot.angle = 180 - simRobot.angle;
+                simRobot.x = Math.max(20, Math.min(simCanvas.width - 20, simRobot.x));
+            }
+            if (simRobot.y < 20 || simRobot.y > simCanvas.height - 20) {
+                simRobot.angle = -simRobot.angle;
+                simRobot.y = Math.max(20, Math.min(simCanvas.height - 20, simRobot.y));
+            }
+
+            simObstacles.forEach(o => {
+                if (simRobot.x > o.x - 20 && simRobot.x < o.x + o.w + 20 &&
+                    simRobot.y > o.y - 15 && simRobot.y < o.y + o.h + 15) {
+                    simRobot.angle += 90 + Math.random() * 180;
+                    simRobot.speed *= 0.5;
+                }
+            });
+
+            drawSimulator();
+            requestAnimationFrame(updateSimulation);
+        }
+
+        function toggleSimulation() {
+            simRunning = !simRunning;
+            const btn = document.getElementById('simPlayBtn');
+            btn.textContent = simRunning ? ' PAUSE' : '▶ START';
+            btn.className = simRunning ? 'sim-btn pause' : 'sim-btn play';
+        }
+
+        function resetSimulation() {
+            simRunning = false;
+            simRobot = { x: 100, y: 225, angle: 0, speed: 0 };
+            simBattery = 100;
+            simDistance = 0;
+            document.getElementById('simPlayBtn').textContent = '▶ START';
+            document.getElementById('simPlayBtn').className = 'sim-btn play';
+            drawSimulator();
+        }
+
+        updateSimulation();
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                scrollToSection('chat');
+            }
+        });
+
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                navbar.style.transform = 'translateY(0)';
+            }
+            navbar.style.transition = 'transform 0.3s';
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html>
