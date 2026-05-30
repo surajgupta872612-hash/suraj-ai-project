@@ -1,0 +1,424 @@
+modern-website/
+├── public/
+│   └── index.html
+├── src/
+│   ├── components/
+│   │   ├── Navbar.jsx
+│   │   ├── Hero.jsx
+│   │   ├── About.jsx
+│   │   ├── Services.jsx
+│   │   ├── Contact.jsx
+│   │   └── Footer.jsx
+│   ├── App.jsx
+│   ├── index.css
+│   └── main.jsx
+├── package.json
+├── vite.config.js
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexusUI - Modern Digital Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>└── README.md
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+import { useState, useEffect } from 'react'
+import Navbar from './components/Navbar'
+import Hero from './components/Hero'
+import About from './components/About'
+import Services from './components/Services'
+import Contact from './components/Contact'
+import Footer from './components/Footer'
+
+function App() {
+  const [darkMode, setDarkMode] = useState(true)
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
+  }, [darkMode])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible')
+      })
+    }, { threshold: 0.1 })
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <div className="app-wrapper">
+      <div className="bg-grid"></div>
+      <div className="bg-orb orb-1"></div>
+      <div className="bg-orb orb-2"></div>
+      <div className="bg-orb orb-3"></div>
+
+      <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
+      <main>
+        <Hero />
+        <About />
+        <Services />
+        <Contact />
+      </main>
+      <Footer />
+    </div>
+  )
+}
+
+export default App
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root, [data-theme="dark"] {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-card: rgba(255, 255, 255, 0.03);
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0b0;
+  --accent: #6c63ff;
+  --accent-hover: #7b73ff;
+  --accent-glow: rgba(108, 99, 255, 0.35);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --gradient-1: linear-gradient(135deg, #6c63ff, #e942f5);
+  --gradient-2: linear-gradient(135deg, #00d2ff, #6c63ff);
+}
+
+[data-theme="light"] {
+  --bg-primary: #f8f9fc;
+  --bg-secondary: #ffffff;
+  --bg-card: rgba(0, 0, 0, 0.02);
+  --text-primary: #0a0a0f;
+  --text-secondary: #4a4a5a;
+  --accent: #6c63ff;
+  --accent-hover: #5a52e0;
+  --accent-glow: rgba(108, 99, 255, 0.25);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.06);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-family: 'Inter', sans-serif; }
+body { background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; overflow-x: hidden; }
+a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
+button { cursor: pointer; border: none; outline: none; font-family: inherit; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+.bg-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(108,99,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(108,99,255,0.04) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: -1; }
+.bg-orb { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: -1; }
+.orb-1 { width: 400px; height: 400px; background: rgba(108,99,255,0.15); top: -100px; right: -100px; animation: float 8s ease-in-out infinite; }
+.orb-2 { width: 300px; height: 300px; background: rgba(233,66,245,0.1); bottom: -50px; left: -50px; animation: float 10s ease-in-out infinite reverse; }
+.orb-3 { width: 250px; height: 250px; background: rgba(0,210,255,0.08); top: 50%; left: 50%; transform: translate(-50%, -50%); animation: float 12s ease-in-out infinite; }
+
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+.reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.4,0,0.2,1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Navbar */
+.navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 0; transition: all 0.3s ease; }
+.navbar.scrolled { background: var(--glass-bg); backdrop-filter: blur(16px); border-bottom: 1px solid var(--glass-border); }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.nav-container { display: flex; align-items: center; justify-content: space-between; }
+.logo { font-size: 1.5rem; font-weight: 800; }
+.logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 2rem; }
+.nav-links a { font-weight: 500; color: var(--text-secondary); position: relative; }
+.nav-links a:hover { color: var(--text-primary); }
+.nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--gradient-1); transition: width 0.3s; }
+.nav-links a:hover::after { width: 100%; }
+.nav-actions { display: flex; gap: 1rem; align-items: center; }
+.theme-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 8px 12px; border-radius: 10px; font-size: 1.1rem; }
+.hamburger { display: none; flex-direction: column; gap: 5px; background: none; }
+.hamburger span { width: 24px; height: 2px; background: var(--text-primary); transition: 0.3s; }
+.mobile-menu { display: none; position: fixed; inset: 0; background: rgba(10,10,15,0.95); backdrop-filter: blur(10px); z-index: 999; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; }
+.mobile-menu.active { display: flex; }
+.mobile-menu a { font-size: 1.5rem; font-weight: 600; }
+
+/* Hero */
+.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 120px 24px 80px; }
+.badge { display: inline-block; padding: 6px 16px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 50px; font-size: 0.8rem; margin-bottom: 1.5rem; }
+.title { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -1px; }
+.subtitle { font-size: 1.1rem; color: var(--text-secondary); max-width: 650px; margin: 0 auto 2.5rem; line-height: 1.7; }
+.hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.btn { padding: 14px 32px; border-radius: 12px; font-weight: 600; transition: all 0.3s; }
+.btn.primary { background: var(--gradient-1); color: #fff; }
+.btn.primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px var(--accent-glow); }
+.btn.secondary { background: var(--glass-bg); border: 1px solid var(--glass-border); }
+.btn.secondary:hover { background: var(--glass-border); }
+
+/* Sections */
+.section { padding: 100px 0; }
+.bg-alt { background: var(--bg-secondary); }
+.section-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 1rem; }
+.section-title.center { text-align: center; margin-bottom: 3rem; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+.check-list { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; }
+.check-list li { font-size: 1.05rem; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.stat-card.glass { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(12px); padding: 2rem; border-radius: 16px; text-align: center; }
+.stat-card h3 { font-size: 2.5rem; font-weight: 800; background: var(--gradient-1); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.stat-card p { color: var(--text-secondary); margin-top: 0.5rem; }
+
+/* Services */
+.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; }
+.service-card.glass { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(12px); padding: 2.5rem 2rem; border-radius: 16px; transition: 0.3s; }
+.service-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+.service-card .icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.service-card h3 { font-size: 1.4rem; margin-bottom: 0.8rem; }
+.service-card p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+.learn-more { color: var(--accent); font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; }
+
+/* Contact */
+.contact-form { max-width: 700px; margin: 0 auto; padding: 3rem; background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(16px); border-radius: 20px; }
+.input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+input, textarea { width: 100%; padding: 14px 18px; background: var(--bg-primary); border: 1px solid var(--glass-border); border-radius: 12px; color: var(--text-primary); font-size: 1rem; transition: 0.3s; }
+input:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+textarea { margin-bottom: 1.5rem; resize: vertical; }
+.full-width { width: 100%; }
+
+/* Footer */
+.footer { padding: 60px 0 30px; border-top: 1px solid var(--glass-border); }
+.footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; }
+.footer-brand h3 { font-size: 1.8rem; font-weight: 800; }
+.footer-brand h3 span { color: var(--accent); }
+.footer-brand p { color: var(--text-secondary); margin-top: 0.5rem; }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a { color: var(--text-secondary); }
+.footer-links a:hover { color: var(--accent); }
+.copyright { text-align: center; color: var(--text-secondary); font-size: 0.85rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--glass-border); }
+
+.gradient-text { background: var(--gradient-1); -webkit-background-clip: text; background-clip: text; color: transparent; animation: gradientShift 4s ease infinite; background-size: 200% 200%; }
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .stats-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .input-group { grid-template-columns: 1fr; }
+  .contact-form { padding: 2rem; }
+  .hero { padding-top: 100px; }
+}
+import { useState } from 'react'
+
+export default function Navbar({ darkMode, setDarkMode }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  window.addEventListener('scroll', () => setScrolled(window.scrollY > 50))
+
+  const toggleTheme = () => setDarkMode(!darkMode)
+  const closeMenu = () => setMenuOpen(false)
+
+  const navLinks = [
+    { name: 'Home', href: '#home' },
+    { name: 'About', href: '#about' },
+    { name: 'Services', href: '#services' },
+    { name: 'Contact', href: '#contact' },
+  ]
+
+  return (
+    <>
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+        <div className="container nav-container">
+          <a href="#" className="logo">Nexus<span>UI</span></a>
+          
+          <ul className="nav-links">
+            {navLinks.map(link => (
+              <li key={link.name}><a href={link.href} onClick={closeMenu}>{link.name}</a></li>
+            ))}
+          </ul>
+
+          <div className="nav-actions">
+            <button className="theme-btn" onClick={toggleTheme} aria-label="Toggle theme">
+              {darkMode ? '☀️' : '🌙'}
+            </button>
+            <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+              <span></span><span></span><span></span>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {menuOpen && (
+        <div className="mobile-menu active" onClick={closeMenu}>
+          {navLinks.map(link => (
+            <a key={link.name} href={link.href} onClick={closeMenu}>{link.name}</a>
+          ))}
+        </div>
+      )}
+    </>
+  )
+}
+export default function Hero() {
+  return (
+    <section id="home" className="hero">
+      <div className="container hero-content reveal">
+        <div className="badge">🚀 Launching v2.0 — Now Live</div>
+        <h1 className="title">Build the <span className="gradient-text">Future</span> of Digital</h1>
+        <p className="subtitle">Premium web experiences engineered for speed, elegance, and scalability. We turn complex ideas into seamless reality.</p>
+        <div className="hero-btns">
+          <a href="#contact" className="btn primary">Get Started</a>
+          <a href="#services" className="btn secondary">Explore Services</a>
+        </div>
+      </div>
+    </section>
+  )
+}
+export default function About() {
+  const stats = [
+    { num: '150+', label: 'Projects Delivered' },
+    { num: '98%', label: 'Client Satisfaction' },
+    { num: '5+', label: 'Years Experience' },
+    { num: '24/7', label: 'Support' }
+  ]
+
+  return (
+    <section id="about" className="section">
+      <div className="container grid-2 reveal">
+        <div className="about-text">
+          <h2 className="section-title">Why Choose <span className="gradient-text">NexusUI</span>?</h2>
+          <p>We blend cutting-edge technology with minimalist design principles. Every pixel is intentional, every line of code is optimized, and every interaction feels effortless.</p>
+          <ul className="check-list">
+            <li>⚡ Lightning-fast performance</li>
+            <li>📱 Fully responsive & mobile-first</li>
+            <li>🔒 Enterprise-grade security</li>
+            <li>♻️ Sustainable & scalable architecture</li>
+          </ul>
+        </div>
+        <div className="stats-grid">
+          {stats.map((s, i) => (
+            <div key={i} className="stat-card glass">
+              <h3>{s.num}</h3>
+              <p>{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+export default function Services() {
+  const services = [
+    { title: 'Web Development', desc: 'Custom React, Next.js & full-stack solutions built for performance.', icon: '💻' },
+    { title: 'UI/UX Design', desc: 'Research-driven interfaces that convert visitors into loyal users.', icon: '🎨' },
+    { title: 'Cloud & DevOps', desc: 'Automated deployments, CI/CD, and scalable cloud infrastructure.', icon: '☁️' },
+    { title: 'SEO & Analytics', desc: 'Data-driven optimization to maximize visibility and growth.', icon: '📊' },
+  ]
+
+  return (
+    <section id="services" className="section bg-alt">
+      <div className="container reveal">
+        <h2 className="section-title center">Our <span className="gradient-text">Services</span></h2>
+        <div className="services-grid">
+          {services.map((s, i) => (
+            <div key={i} className="service-card glass">
+              <div className="icon">{s.icon}</div>
+              <h3>{s.title}</h3>
+              <p>{s.desc}</p>
+              <a href="#contact" className="learn-more">Learn More →</a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+import { useState } from 'react'
+
+export default function Contact() {
+  const [form, setForm] = useState({ name: '', email: '', message: '' })
+  
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    alert(`✅ Thank you ${form.name}! Your message has been received.`)
+    setForm({ name: '', email: '', message: '' })
+  }
+
+  return (
+    <section id="contact" className="section">
+      <div className="container reveal">
+        <h2 className="section-title center">Let's <span className="gradient-text">Connect</span></h2>
+        <form className="contact-form glass" onSubmit={handleSubmit}>
+          <div className="input-group">
+            <input type="text" placeholder="Your Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required />
+            <input type="email" placeholder="Email Address" value={form.email} onChange={e => setForm({...form, email: e.target.value})} required />
+          </div>
+          <textarea placeholder="Your Message" value={form.message} onChange={e => setForm({...form, message: e.target.value})} rows="5" required></textarea>
+          <button type="submit" className="btn primary full-width">Send Message 🚀</button>
+        </form>
+      </div>
+    </section>
+  )
+}export default function Footer() {
+  return (
+    <footer className="footer">
+      <div className="container footer-content">
+        <div className="footer-brand">
+          <h3>Nexus<span>UI</span></h3>
+          <p>Building tomorrow's digital experiences, today.</p>
+        </div>
+        <div className="footer-links">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Twitter</a>
+          <a href="#">GitHub</a>
+        </div>
+      </div>
+      <div className="container copyright">
+        © {new Date().getFullYear()} NexusUI. All rights reserved.
+      </div>
+    </footer>
+  )
+}{
+  "name": "modern-website",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.8"
+  }
+}import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+})
